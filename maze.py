@@ -1,6 +1,7 @@
 import numpy as np
 from copy import deepcopy
 
+
 FINAL = 'F'
 INITIAL = 'S'
 BLOCK = '□'
@@ -31,7 +32,7 @@ class Maze:
         """Print board of actual maze"""
         horizontal_border = '+---' * self.columns + '+'
         output = ""
-        for row in reversed(self.board):  # Assuming maze is the correct attribute to print
+        for row in reversed(self.board):  
             output += horizontal_border + '\n'
             output += '| ' + ' | '.join(row) + ' |\n'
         output += horizontal_border + '\n'
@@ -111,7 +112,6 @@ class Maze:
         row, col = (self.current_position[0] + 1, self.current_position[1])
         if (self.current_move != UP_ARROW and self.length_move == self.last_length_move): 
             return False
-
         self.current_position = (row,col)
         self.board[row][col] = UP_ARROW
         self.update_length_moves(UP_ARROW)
@@ -158,11 +158,11 @@ class Maze:
         """Check if maze is solved"""
         return self.current_position == self.final_position and np.count_nonzero(self.board == ' ') == 0
 
+
     def print_all_moves(maze) -> None:
         """Print the the moves until maze is solved or no more move is allowed"""
-        print("Steps:", len(maze.path_record) - 1)
-        # prints the sequence of states
+        print("Passos:", len(maze.path_record) - 1)
         maze.path_record[-1].board[maze.rows-1][maze.columns-1] = FINAL
-        for board in maze.path_record:
-            print(board)
-            print()
+        print(maze.path_record[-1].board)
+        # for board in maze.path_record:
+        #     print(board)
