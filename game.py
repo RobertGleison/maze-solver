@@ -5,7 +5,7 @@ from maze import Maze
 def main():
     # game_mode = select_game_mode()
     maze = create_game()
-    maze.print_board()
+    print(maze)
 
 def create_game():
     rows = 6

@@ -1,46 +1,64 @@
+import numpy as np
+
+FINAL = 'F'
+INITIAL = 'S'
+BLOCK = '□'
+CURRENT_POS = '○'
+UP = '↑'
+RIGHT = '→'
+DOWN = '↓'
+LEFT = '←'
+
 class Maze:
     def __init__(self, rows, columns, block_positions) -> None:
         self.rows = rows
         self.columns = columns
         self.board = self.make_board(block_positions)
-        self.current_row = 0
-        self.curren_column = 0
-        self.path = 0
-        self.last_move = 0
-        self.current_move = 0
+        self.path_record = []
+        self.last_position = (None,None)
+        self.last_move = ''
+        self.last_length_move = 0
+        self.current_position = (0,0)
 
 
-    def print_board(self):
+    def __str__(self):
         horizontal_border = '+---' * self.columns + '+'
-        for row in reversed(self.board):
-            print(horizontal_border)
-            print('| ' + ' | '.join(row) + ' |')
-        print(horizontal_border)
+        output = ""
+        for row in reversed(self.board):  # Assuming maze is the correct attribute to print
+            output += horizontal_border + '\n'
+            output += '| ' + ' | '.join(row) + ' |\n'
+        output += horizontal_border + '\n'
+        return output
     
     
     def add_final_position(self, board):
-        board[self.rows - 1][self.columns - 1] = 'F'
+        board[self.rows - 1][self.columns - 1] = FINAL
     
+
     def add_initial_position(self, board):
-        board[0][0] = 'S'
+        board[0][0] = INITIAL
     
+
     def add_block_positions(self, board, block_positions):
         for pos in block_positions:
-            board[pos[0]][pos[1]] = '□' 
+            board[pos[0]][pos[1]] = BLOCK
+
 
     def make_board(self, block_positions):
-        board = [[' ' for _ in range(self.columns)] for _ in range(self.rows)]
+        board = np.full((self.rows, self.columns), ' ', dtype='object')
         self.add_initial_position(board)
         self.add_final_position(board)
         self.add_block_positions(board, block_positions)
         return board
- 
- 
-    def add_path(self, path):
-        for i in range(1, len(path)):
-            current_pos = path[i]
-            previous_pos = path[i - 1]
-            if not (0 <= current_pos[0] < self.rows and 0 <= current_pos[1] < self.columns):
-                raise IndexError("Caminho fora do tabuleiro")
-            symbol = '|' if current_pos[1] == previous_pos[1] else '―'
-            self.board[current_pos[0]][current_pos[1]] = symbol
+
+
+    def children(self) -> list:
+        list_of_moves = [self.up, self.down, self.left, self.right]
+        children = []
+        for move in list_of_moves:
+            child = move()
+            if child:
+                child.path_record.append(child)
+                children.append(child)
+        return children
+    
