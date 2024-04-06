@@ -4,23 +4,23 @@ FINAL = 'F'
 INITIAL = 'S'
 BLOCK = '□'
 CURRENT_POS = '○'
-UP = '↑'
-RIGHT = '→'
-DOWN = '↓'
-LEFT = '←'
+UP_ARROW = '↑'
+RIGHT_ARROW = '→'
+DOWN_ARROW = '↓'
+LEFT_ARROW = '←'
 
 class Maze:
-    def __init__(self, rows, columns, block_positions, last_move = ' ', initial_position = (0,0), last_position = (0,0), last_length_move = 0, counter = 0) -> None:
+    def __init__(self, rows, columns, block_positions, last_move = ' ', initial_position = (0,0), last_position = (0,0), last_length_move = 0, length_move = 1) -> None:
         self.rows = rows
         self.columns = columns
         self.board = self.make_board(block_positions)
         self.path_record = []
         self.last_move = last_move # up, down, left or right
-        self.current_move = 'foo'
+        self.current_move = ' '
         self.current_position = initial_position
         self.last_position = last_position
         self.last_length_move = last_length_move
-        self.counter = counter
+        self.length_move = length_move
 
 
     def __str__(self):
@@ -53,9 +53,10 @@ class Maze:
         self.add_block_positions(board, block_positions)
         return board
 
-    def calculate_last_move_length(self):
+    def compare_last_move_length(self):
         if self.current_move != self.last_move:
-            self.last_length_move = self.counter
+            self.last_length_move = self.length_move
+            self.length_move = 0
 
 
     def children(self) -> list:
@@ -68,70 +69,53 @@ class Maze:
                 children.append(child)
         return children
     
+    def update_length_moves(self):
+        if self.last_move == self.current_move: self.length_move+=1
+        # else:
+        #     self.last_move = self.current_move
+        #     self.last_length_move = self.length_move
+        #     self.length_move = 1
+        
     def up(self):
-        new_position = (self.current_position[0] + 1, self.current_position[1])
-        if self.is_valid_move(new_position):
-            self.current_position = new_position
-            # Check for consecutive move distance
-            if self.previous_move_distance != 1:
-                return Maze(self.rows, self.columns, block_positions=[], 
-                        last_move='U', initial_position=self.current_position, 
-                        last_position=self.last_position, 
-                        last_length_move=abs(self.current_position[0] - self.last_position[0]), counter=self.counter + 1)
-        else:
+        row, col = (self.current_position[0] + 1, self.current_position[1])
+        if (row > self.rows-1) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
             return None
+
+        self.current_position = (row,col)
+        self.board[row][col] = UP_ARROW
+        self.current_move = 'up'
+        self.update_length_moves
+        
 
     def down(self):
-        new_position = (self.current_position[0] + 1, self.current_position[1])
-        # Check if move is valid (within boundaries and not blocked)
-        if self.is_valid_move(new_position):
-            self.current_position = new_position
-            # Check for consecutive move distance
-            if self.previous_move_distance != 1:
-                return Maze(self.rows, self.columns, block_positions=[], 
-                        last_move='D', initial_position=self.current_position, 
-                        last_position=self.last_position, 
-                        last_length_move=abs(self.current_position[0] - self.last_position[0]), counter=self.counter + 1)
-        else:
-            return None
+        row, col = (self.current_position[0] - 1, self.current_position[1])
+        if (row < 0) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
+             return None
+        self.current_position = (row,col)
+        self.board[row][col] = DOWN_ARROW
+        self.current_move = 'down'
+        self.update_length_moves
+
 
     def left(self):
-        new_position = (self.current_position[0], self.current_position[1] - 1)
-        # Check if move is valid (within boundaries and not blocked)
-        if self.is_valid_move(new_position):
-            self.current_position = new_position
-            # Check for consecutive move distance
-            if self.previous_move_distance != 1:
-                return Maze(self.rows, self.columns, block_positions=[], 
-                        last_move='L', initial_position=self.current_position, 
-                        last_position=self.last_position, 
-                        last_length_move=abs(self.current_position[1] - self.last_position[1]), counter=self.counter + 1)
-        else:
+        row, col = (self.current_position[0], self.current_position[1] - 1)
+        if (col < 0) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
             return None
+        self.current_position = (row,col)
+        self.board[row][col] = LEFT_ARROW
+        self.current_move = 'left'
+        self.update_length_moves
+
 
     def right(self):
-        new_position = (self.current_position[0], self.current_position[1] + 1)
-        # Check if move is valid (within boundaries and not blocked)
-        if self.is_valid_move(new_position):
-            self.current_position = new_position
-            # Check for consecutive move distance
-            if self.previous_move_distance != 1:
-                return Maze(self.rows, self.columns, block_positions=[], 
-                        last_move='R', initial_position=self.current_position, 
-                        last_position=self.last_position, 
-                        last_length_move=abs(self.current_position[1] - self.last_position[1]), counter=self.counter + 1)
-        else:
-            return None
+        row, col = (self.current_position[0], self.current_position[1] + 1)
+        if (col > self.columns-1) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
+                return None
+        self.current_position = (row,col)
+        self.board[row][col] = RIGHT_ARROW
+        self.current_move = 'right'
+        self.update_length_moves
 
-    def is_valid_move(self, new_position):
-        """Checks if a move is valid within the maze boundaries and not blocked."""
-        rows, cols = self.rows, self.columns
-        # Check if within boundaries
-        if 0 <= new_position[0] < rows and 0 <= new_position[1] < cols:
-            # Check if not blocked position
-            return self.board[new_position[0]][new_position[1]] != BLOCK
-        else:
-            return False
 
     # def print_sequence(node:Maze):
         # if node is None:
