@@ -12,6 +12,11 @@ def create_game():
     columns = 6
     return Maze(rows, columns, block_positions = [(4,4),(2,2),(3,2)])
 
+
+if __name__ == "__main__":
+    main()
+
+    
 # def select_game_mode():
 #     game_modes = {1: "BFS", 2: "DFS", 3: "Greedy", 4: "A*", 5: "Iterative DFS" }
 #     while True:
@@ -25,7 +30,3 @@ def create_game():
 #             if game_mode in game_modes: break
 #         print("Por favor, digite um número correspondente a um modo de resolução válido.\n")
 #     print(f"Modo selecionado: {game_modes[game_mode]}\n\n") 
-
-
-if __name__ == "__main__":
-    main()
