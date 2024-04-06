@@ -18,9 +18,34 @@ import time
 # if __name__ == "__main__":
 #     main()
 
+# def breadth_first_search(initial_maze):
+#     queue = deque([initial_maze])
+#     visited = set()  # Set to store visited positions or states
+    
+#     while queue:
+#         maze = queue.popleft()   # Primeiro elemento da fila (por ordem de chegada - FIFO)
+        
+#         # Check if the maze is complete
+#         if maze.is_complete():
+#             print("is complete")
+#             return maze.print_all_moves(maze)
+        
+#         # Mark the current maze state as visited
+#         visited.add(tuple(maze.current_position))
+        
+#         # Get children and enqueue unvisited children
+#         for child in maze.children():
+#             if tuple(child.current_position) not in visited:
+#                 queue.append(child)
+#                 print(child)
+
+#                 visited.add(tuple(child.current_position))
+                
+#     return None
+
+
 def breadth_first_search(initial_maze):
     queue = deque([initial_maze])  
-    
     while queue:
         maze = queue.popleft()   #primeiro elemento da fila (por ordem de chegada - FIFO)
         if maze.is_complete():   # ver se ja esta completo
@@ -28,11 +53,11 @@ def breadth_first_search(initial_maze):
         
         for child in maze.children():   # ver as children deste nó
             print(child)
-            time.sleep(1)
             queue.append(child)        
+            # time.sleep(0.5)
     return None
 
-maze = Maze(6,6, block_positions=[(0,3), (0,1), (0,2)])
+maze = Maze(3,3, block_positions=[])
 inicio = time.time()
 breadth_first_search(maze)
 print('\n ' + str(time.time() - inicio) + '\n')
