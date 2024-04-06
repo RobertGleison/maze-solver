@@ -38,28 +38,47 @@ import time
 #             if tuple(child.current_position) not in visited:
 #                 queue.append(child)
 #                 print(child)
+#                 time.sleep(1)
 
 #                 visited.add(tuple(child.current_position))
                 
 #     return None
 
-
-def breadth_first_search(initial_maze):
-    queue = deque([initial_maze])  
-    while queue:
-        maze = queue.popleft()   #primeiro elemento da fila (por ordem de chegada - FIFO)
-        if maze.is_complete():   # ver se ja esta completo
-            return maze.print_all_moves(maze)
+def depth_first_search(initial_maze:Maze):
+    stack = deque([initial_maze]) 
+    visited = set()
+    
+    while stack:
+        maze = stack.pop() #get the last element that came in
         
-        for child in maze.children():   # ver as children deste nó
+        if maze.is_complete():   
+            return maze.print_all_moves(maze)
+        visited.add(maze)
+        children = maze.children()
+        for child in children:
             print(child)
-            queue.append(child)        
             # time.sleep(0.5)
-    return None
+            if child not in visited:
+                stack.append(child)
+                
+    return maze.print_all_moves(maze)
 
-maze = Maze(3,3, block_positions=[])
+# def breadth_first_search(initial_maze):
+#     queue = deque([initial_maze])  
+#     while queue:
+#         maze = queue.popleft()   #primeiro elemento da fila (por ordem de chegada - FIFO)
+#         if maze.is_complete():   # ver se ja esta completo
+#             return maze.print_all_moves()
+        
+#         for child in maze.children():   # ver as children deste nó
+#             print(child)
+#             queue.append(child)        
+#             # time.sleep(0.5)
+#     return None
+
+maze = Maze(4,4, block_positions=[(0,3)])
 inicio = time.time()
-breadth_first_search(maze)
+depth_first_search(maze)
 print('\n ' + str(time.time() - inicio) + '\n')
 print('------------------------')
 
