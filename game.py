@@ -1,22 +1,43 @@
 import os
 import random
 from maze import Maze
+from collections import deque
+import time
 
-def main():
-    # game_mode = select_game_mode()
-    maze = create_game()
-    print(maze)
+# def main():
+#     # game_mode = select_game_mode()
+#     maze = create_game()
+#     print(maze)
 
-def create_game():
-    rows = 6
-    columns = 6
-    return Maze(rows, columns, block_positions = [(4,4),(2,2),(3,2)])
+# def create_game():
+#     rows = 6
+#     columns = 6
+#     return Maze(rows, columns, block_positions = [(4,4),(2,2),(3,2)])
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
+def breadth_first_search(initial_maze):
+    queue = deque([initial_maze])  
     
+    while queue:
+        maze = queue.popleft()   #primeiro elemento da fila (por ordem de chegada - FIFO)
+        if maze.is_complete():   # ver se ja esta completo
+            return maze.print_all_moves(maze)
+        
+        for child in maze.children():   # ver as children deste nó
+            print(child)
+            time.sleep(1)
+            queue.append(child)        
+    return None
+
+maze = Maze(6,6, block_positions=[(0,3), (0,1), (0,2)])
+inicio = time.time()
+breadth_first_search(maze)
+print('\n ' + str(time.time() - inicio) + '\n')
+print('------------------------')
+
 # def select_game_mode():
 #     game_modes = {1: "BFS", 2: "DFS", 3: "Greedy", 4: "A*", 5: "Iterative DFS" }
 #     while True:

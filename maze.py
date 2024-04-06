@@ -1,4 +1,6 @@
+import copy
 import numpy as np
+from copy import deepcopy
 
 FINAL = 'F'
 INITIAL = 'S'
@@ -13,6 +15,8 @@ class Maze:
     def __init__(self, rows, columns, block_positions, last_move = ' ', initial_position = (0,0), last_position = (0,0), last_length_move = 0, length_move = 1) -> None:
         self.rows = rows
         self.columns = columns
+        self.final_position = (rows-1,columns-1)
+        self.initial_position = (0,0)
         self.board = self.make_board(block_positions)
         self.path_record = []
         self.last_move = last_move # up, down, left or right
@@ -53,6 +57,7 @@ class Maze:
         self.add_block_positions(board, block_positions)
         return board
 
+
     def compare_last_move_length(self):
         if self.current_move != self.last_move:
             self.last_length_move = self.length_move
@@ -65,64 +70,85 @@ class Maze:
         for move in list_of_moves:
             child = move()
             if child:
-                child.path_record.append(child)
+                child.path_record += [deepcopy(child)]
                 children.append(child)
         return children
     
+
     def update_length_moves(self):
         if self.last_move == self.current_move: self.length_move+=1
-        # else:
-        #     self.last_move = self.current_move
-        #     self.last_length_move = self.length_move
-        #     self.length_move = 1
-        
+        else:
+            self.last_move = self.current_move
+            self.last_length_move = self.length_move
+            self.length_move = 1
+    
+
+    def move(func):
+        def decorator(self):
+            node = copy.deepcopy(self)
+            result = func(node)  
+            return node if result else None
+        return decorator
+    
+
+    @move
     def up(self):
         row, col = (self.current_position[0] + 1, self.current_position[1])
         if (row > self.rows-1) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
-            return None
+            return False
 
         self.current_position = (row,col)
         self.board[row][col] = UP_ARROW
-        self.current_move = 'up'
+        self.current_move = UP_ARROW
         self.update_length_moves
+        return True
         
 
+    @move
     def down(self):
         row, col = (self.current_position[0] - 1, self.current_position[1])
         if (row < 0) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
-             return None
+             return False
         self.current_position = (row,col)
         self.board[row][col] = DOWN_ARROW
-        self.current_move = 'down'
+        self.current_move = DOWN_ARROW
         self.update_length_moves
+        return True
 
 
+    @move
     def left(self):
         row, col = (self.current_position[0], self.current_position[1] - 1)
         if (col < 0) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
-            return None
+            return False
         self.current_position = (row,col)
         self.board[row][col] = LEFT_ARROW
-        self.current_move = 'left'
+        self.current_move = LEFT_ARROW
         self.update_length_moves
+        return True
 
 
+    @move
     def right(self):
         row, col = (self.current_position[0], self.current_position[1] + 1)
         if (col > self.columns-1) or (self.board[row,col] == BLOCK) or (self.board[row, col] == FINAL and np.count_nonzero(self.maze == ' ') > 0) or (self.length_move == self.last_length_move): 
-                return None
+            return False
         self.current_position = (row,col)
         self.board[row][col] = RIGHT_ARROW
-        self.current_move = 'right'
+        self.current_move = RIGHT_ARROW
         self.update_length_moves
+        return True
 
 
-    # def print_sequence(node:Maze):
-        # if node is None:
-        #     print('There is no solution')
-        #     return
-        # print("Steps:", len(node.move_history) - 1)
-        # # prints the sequence of states
-        # for maze in node.move_history:
-        #     print(maze)
-        #     print()
+    def is_complete(self):
+        return self.current_move == self.final_position and np.count_nonzero(self.maze == ' ') == 0
+
+    def print_all_moves(maze):
+        if maze is None:
+            print('There is no solution')
+            return
+        print("Steps:", len(maze.path_record) - 1)
+        # prints the sequence of states
+        for maze in maze.path_record:
+            print(maze)
+            print()
