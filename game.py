@@ -11,7 +11,7 @@ def main():
 
 
 def create_game(game_mode):
-    return Maze(3, 3, block_positions = [])
+    return Maze(3, 3, block_positions = [(2,1)])
 
 
 def select_game_mode():

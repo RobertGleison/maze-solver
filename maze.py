@@ -160,16 +160,15 @@ class Maze:
         """Check if maze is solved"""
         return (self.current_position == self.final_position and np.count_nonzero(self.board == ' ') == 0)
 
+    def there_is_no_solution(self) -> bool:
+        return self.children() == [] and (np.count_nonzero(self.board == ' ') > 0 or np.count_nonzero(self.board == ' ') == 0)
+        
 
     def print_final_maze(self) -> None:
         """Print solved maze board"""
         final_board = deepcopy(self.board)
         final_board[self.rows-1][self.columns-1] = FINAL
         print(str_for_boards(final_board))
-        print("Movimentos: ", end='')
-        for record in final_board:
-            for move in record:
-                print(f"{move} ",end='')
         print("\nPassos:", len(self.path_record) - 1)
 
 def str_for_boards(board):
