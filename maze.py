@@ -164,12 +164,12 @@ class Maze:
         return self.children() == [] and (np.count_nonzero(self.board == ' ') > 0 or np.count_nonzero(self.board == ' ') == 0)
         
 
-    def print_final_maze(self) -> None:
-        """Print solved maze board"""
-        final_board = deepcopy(self.board)
-        final_board[self.rows-1][self.columns-1] = FINAL
-        print(str_for_boards(final_board))
-        print("\nPassos:", len(self.path_record) - 1)
+def print_final_maze(maze) -> None:
+    """Print solved maze board"""
+    final_board = deepcopy(maze.board)
+    final_board[maze.rows-1][maze.columns-1] = FINAL
+    print(str_for_boards(final_board))
+    print("\nPassos:", len(maze.path_record) - 1)
 
 def str_for_boards(board):
     """Print board of actual maze"""
