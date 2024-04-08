@@ -1,20 +1,22 @@
 from maze import Maze
 from collections import deque
 import time
+import os
 
 
 def depth_first_search(initial_maze:Maze):
     stack = deque([initial_maze]) 
     visited = set()
     while stack:
-        maze = stack.pop() #get the last element that came in
+        maze = stack.pop() 
         if maze.is_complete():   
-            return maze.print_all_moves(maze)
+            return maze.print_final_maze()
         visited.add(maze)
         children = maze.children()
         for child in children:
-            print(child)
-            # time.sleep(0.5)
+            time.sleep(0.3)
+            os.system('clear')
+            print("Modo selecionado: DFS\n \n", child) 
             if child not in visited:
                 stack.append(child)  
     return maze.print_all_moves(maze)
@@ -23,18 +25,16 @@ def depth_first_search(initial_maze:Maze):
 def breadth_first_search(initial_maze):
     queue = deque([initial_maze])  
     while queue:
-        maze = queue.popleft()   #primeiro elemento da fila (por ordem de chegada - FIFO)
-        if maze.is_complete():   # ver se ja esta completo
-            return maze.print_all_moves()
-        for child in maze.children():   # ver as children deste nó
-            queue.append(child)        
-            # time.sleep(0.5)
+        maze = queue.popleft()   
+        if maze.is_complete():   
+            return maze.print_final_maze()
+        for child in maze.children():   
+            queue.append(child)    
+            time.sleep(0.3)
+            os.system('clear')
+            print("Modo selecionado: BFS\n\n", child)    
     return None
 
 
-def chose_algorithm(game_mode: int, maze: Maze):
-    maze = Maze(6,6, block_positions=[(5,0),(5,1),(5,2)])
-    inicio = time.time()
-    depth_first_search(maze)
-    print('\n ' + str(time.time() - inicio) + '\n')
+
    

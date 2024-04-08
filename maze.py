@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from copy import deepcopy
 
 
@@ -10,7 +11,7 @@ UP_ARROW = '↑'
 RIGHT_ARROW = '→'
 DOWN_ARROW = '↓'
 LEFT_ARROW = '←'
-LIST_OF_ARROWS = [UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW]
+LIST_OF_ARROWS = [UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, INITIAL]
 
 class Maze:
     def __init__(self, rows: int, columns: int, block_positions: list) -> None:
@@ -37,6 +38,7 @@ class Maze:
             output += '| ' + ' | '.join(row) + ' |\n'
         output += horizontal_border + '\n'
         return output
+    
     
     
     def add_final_position(self, board: np.ndarray) -> None:
@@ -156,13 +158,27 @@ class Maze:
 
     def is_complete(self) -> bool:
         """Check if maze is solved"""
-        return self.current_position == self.final_position and np.count_nonzero(self.board == ' ') == 0
+        return (self.current_position == self.final_position and np.count_nonzero(self.board == ' ') == 0)
 
 
-    def print_all_moves(maze) -> None:
-        """Print the the moves until maze is solved or no more move is allowed"""
-        print("Passos:", len(maze.path_record) - 1)
-        maze.path_record[-1].board[maze.rows-1][maze.columns-1] = FINAL
-        print(maze.path_record[-1].board)
-        # for board in maze.path_record:
-        #     print(board)
+    def print_final_maze(self) -> None:
+        """Print solved maze board"""
+        final_board = deepcopy(self.board)
+        final_board[self.rows-1][self.columns-1] = FINAL
+        print(str_for_boards(final_board))
+        print("Movimentos: ", end='')
+        for record in final_board:
+            for move in record:
+                print(f"{move} ",end='')
+        print("\nPassos:", len(self.path_record) - 1)
+
+def str_for_boards(board):
+    """Print board of actual maze"""
+    rows, columns = len(board), len(board[0])
+    horizontal_border = '+---' * columns + '+'
+    output = ""
+    for row in reversed(board):
+        output += horizontal_border + '\n'
+        output += '| ' + ' | '.join(row) + ' |\n'
+    output += horizontal_border + '\n'
+    return output
