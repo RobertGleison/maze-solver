@@ -1,7 +1,6 @@
 import pygame
 import sys
 import time
-import math
 
 CELL_SIZE = 100
 BOARD_WIDTH = 10
@@ -48,6 +47,7 @@ def create_interface(maze):
         board[pos[1]][pos[0]] = 2
         draw_board(board, screen)
         draw_blocks(screen, interface.block_positions)
+        positions_visited.append(pos)
         draw_trajectory(screen, positions_visited)
         draw_initial_position(screen, interface.initial_position)
         draw_final_position(screen, interface.final_position)
@@ -56,7 +56,6 @@ def create_interface(maze):
         time.sleep(0.5)
 
         old_tuple = pos
-        positions_visited.append(pos)
     time.sleep(3)
     pygame.quit()
     sys.exit()
@@ -98,6 +97,7 @@ def draw_trajectory(screen, positions):
         
         # Draw the line segments
         for i in range(len(positions) - 1):
+            print(len(positions))
             start_point = (positions[i][0] * CELL_SIZE + CELL_SIZE // 2, positions[i][1] * CELL_SIZE + CELL_SIZE // 2)
             end_point = (positions[i + 1][0] * CELL_SIZE + CELL_SIZE // 2, positions[i + 1][1] * CELL_SIZE + CELL_SIZE // 2)
             pygame.draw.line(screen, BLACK, start_point, end_point, thickness)
@@ -107,3 +107,4 @@ def draw_trajectory(screen, positions):
             rect_end = (end_point[0] - thickness // 2, end_point[1] - thickness // 2, thickness, thickness)
             pygame.draw.rect(screen, BLACK, rect_start)
             pygame.draw.rect(screen, BLACK, rect_end)
+
