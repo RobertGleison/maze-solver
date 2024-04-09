@@ -13,15 +13,31 @@ GRAY = (200, 200, 200)
 
 class Interface:
     def __init__(self, maze):
-        self.initial_position = maze.initial_position
-        self.final_position = maze.final_position
+        self.initial_position = (0,maze.columns-1)
+        self.final_position = (maze.rows-1,0)
         self.rows = maze.rows
         self.columns = maze.columns
-        self.positions = maze.position_record + [(self.rows-1, self.columns-1)]
+        self.position_record = [(0,0)] + maze.position_record  # Append tuple to the list
+        self.positions = self.reverse_positions(maze.position_record)  # Pass the modified list
         self.block_positions = maze.block_positions
         global SCREEN_HEIGHT, SCREEN_WIDTH
         SCREEN_HEIGHT = CELL_SIZE * self.rows
         SCREEN_WIDTH = CELL_SIZE * self.columns
+
+    def reverse_positions(self, positions):
+        new_positions = [(self.rows-1,0)]  # Start with the final position
+        for tuple in positions:
+            if tuple[0] == 0:
+                new_positions.append((tuple[0] + 2, tuple[1]))  # Adjust the x-coordinate
+            elif tuple[0] == 2:
+                new_positions.append((tuple[0] - 2, tuple[1]))  # Adjust the x-coordinate
+            else:
+                new_positions.append(tuple)  # No adjustment needed for other rows
+        new_new_positions = []
+        for tuple in new_positions:
+            new_new_positions.append((tuple[1], tuple[0]))
+        return new_new_positions
+
 
 def create_interface(maze):
     pygame.init()
@@ -83,7 +99,7 @@ def draw_board(board, screen):
 def draw_initial_position(screen, pos):
     x, y = pos
     rect = pygame.Rect(x * CELL_SIZE + CELL_SIZE // 4, y * CELL_SIZE + CELL_SIZE // 4, CELL_SIZE // 2, CELL_SIZE // 2)
-    pygame.draw.rect(screen, GREEN, rect)
+    pygame.draw.rect(screen, RED, rect)
 
 def draw_final_position(screen, pos):
     x, y = pos
@@ -97,7 +113,6 @@ def draw_trajectory(screen, positions):
         
         # Draw the line segments
         for i in range(len(positions) - 1):
-            print(len(positions))
             start_point = (positions[i][0] * CELL_SIZE + CELL_SIZE // 2, positions[i][1] * CELL_SIZE + CELL_SIZE // 2)
             end_point = (positions[i + 1][0] * CELL_SIZE + CELL_SIZE // 2, positions[i + 1][1] * CELL_SIZE + CELL_SIZE // 2)
             pygame.draw.line(screen, BLACK, start_point, end_point, thickness)
@@ -107,4 +122,7 @@ def draw_trajectory(screen, positions):
             rect_end = (end_point[0] - thickness // 2, end_point[1] - thickness // 2, thickness, thickness)
             pygame.draw.rect(screen, BLACK, rect_start)
             pygame.draw.rect(screen, BLACK, rect_end)
+
+
+          
 
