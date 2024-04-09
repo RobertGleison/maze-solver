@@ -21,12 +21,14 @@ class Maze:
         self.initial_position = (0,0)
         self.board = self.make_board(block_positions)
         self.path_record = []
+        self.position_record = []
         self.last_move = 'last' 
         self.current_move = 'current'
         self.length_move = 0
         self.last_length_move = 1
         self.current_position = self.initial_position
         self.last_position = self.initial_position
+        self.block_positions = block_positions
 
 
     def __str__(self) -> str: 
@@ -73,8 +75,9 @@ class Maze:
         for move in list_of_moves:
             child = move()
             if child:
+                print(type(child))
                 child.path_record += [deepcopy(child)]
-                # self.path_record.append(child)
+                child.position_record += [child.current_position]
                 children.append(child)
         return children
     
@@ -161,6 +164,7 @@ class Maze:
         return (self.current_position == self.final_position and np.count_nonzero(self.board == ' ') == 0)
 
     def there_is_no_solution(self) -> bool:
+        """Check if maze is not solvable"""
         return self.children() == [] and (np.count_nonzero(self.board == ' ') > 0 or np.count_nonzero(self.board == ' ') == 0)
         
 
@@ -171,7 +175,7 @@ def print_final_maze(maze) -> None:
     print(str_for_boards(final_board))
     print("\nPassos:", len(maze.path_record))
 
-def str_for_boards(board):
+def str_for_boards(board) -> str:
     """Print board of actual maze"""
     rows, columns = len(board), len(board[0])
     horizontal_border = '+---' * columns + '+'

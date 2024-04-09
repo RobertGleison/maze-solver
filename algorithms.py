@@ -36,6 +36,7 @@ def depth_first_search(initial_maze:Maze):
     print(f"Tempo execução: {time.time() - start_time:.4f} segundos")
     print(f"Nós máximos na memória: {max_size_stack}")
     print(f"Caminhos diferentes explorados: {n_path_percurred}")
+    return best_maze
 
 
 def breadth_first_search(initial_maze):
@@ -67,6 +68,7 @@ def breadth_first_search(initial_maze):
     print(f"Tempo execução: {time.time() - start_time:.4f} segundos")
     print(f"Nós máximos na memória: {max_size_queue}")
     print(f"Caminhos diferentes explorados: {n_path_percurred}")
+    return best_maze
 
     
 
