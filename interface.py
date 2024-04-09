@@ -53,12 +53,17 @@ def create_interface(maze):
         draw_trajectory(screen, positions_visited)
         draw_initial_position(screen, interface.initial_position)
         draw_final_position(screen, interface.final_position)
-
+        # rotated_screen = pygame.transform.flip(screen,True, False)
+        # rotated_screen = pygame.transform.rotate(screen,-90)
+        # rotated_screen = pygame.transform.flip(screen,True, True)
+        # rotated_screen = pygame.transform.flip(screen,True, False)
+        # rotated_screen = pygame.transform.rotate(screen,30)
+        # screen.blit(rotated_screen, (0, 0))
         pygame.display.flip()
         time.sleep(0.5)
 
         old_tuple = pos
-    time.sleep(5)
+    time.sleep(4)
     pygame.quit()
     sys.exit()
 
@@ -98,7 +103,7 @@ def draw_trajectory(screen, positions):
         thickness = 21
         
         # Draw the line segments
-        for i in range(len(positions) - 1):
+        for i in range(len(positions)-1):
             start_point = (positions[i][0] * CELL_SIZE + CELL_SIZE // 2, positions[i][1] * CELL_SIZE + CELL_SIZE // 2)
             end_point = (positions[i + 1][0] * CELL_SIZE + CELL_SIZE // 2, positions[i + 1][1] * CELL_SIZE + CELL_SIZE // 2)
             pygame.draw.line(screen, BLACK, start_point, end_point, thickness)
