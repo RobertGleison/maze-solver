@@ -28,14 +28,12 @@ class Interface:
 def create_interface(maze):
     pygame.init()
     interface = Interface(maze)
-    print(interface.positions)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Unequal Length Maze")
 
     board = [[0] * BOARD_WIDTH for _ in range(BOARD_HEIGHT)]
 
     old_tuple = interface.initial_position
-    print(old_tuple)
     positions_visited = [old_tuple]
     for pos in interface.positions:
         screen.fill(WHITE)
