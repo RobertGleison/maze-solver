@@ -17,8 +17,8 @@ class Maze:
     def __init__(self, rows: int, columns: int, block_positions: list) -> None:
         self.rows = rows
         self.columns = columns
-        self.final_position = (rows-1,columns-1)
-        self.initial_position = (0,0)
+        self.final_position = (0,self.columns-1)
+        self.initial_position = (self.rows-1,0)
         self.board = self.make_board(block_positions)
         self.path_record = []
         self.position_record = []
@@ -35,7 +35,7 @@ class Maze:
         """Print board of actual maze"""
         horizontal_border = '+---' * self.columns + '+'
         output = ""
-        for row in reversed(self.board):  
+        for row in self.board:  
             output += horizontal_border + '\n'
             output += '| ' + ' | '.join(row) + ' |\n'
         output += horizontal_border + '\n'
@@ -45,12 +45,12 @@ class Maze:
     
     def add_final_position(self, board: np.ndarray) -> None:
         """Add the final position to the maze board"""
-        board[self.rows - 1][self.columns - 1] = FINAL
+        board[0][self.columns - 1] = FINAL
     
 
     def add_initial_position(self, board: np.ndarray) -> None:
         """Add the initial position to the maze board"""
-        board[0][0] = INITIAL
+        board[self.rows-1][0] = INITIAL
     
 
     def add_block_positions(self, board: np.ndarray, block_positions: list) -> None:
@@ -85,8 +85,8 @@ class Maze:
     def avaiable_moves(self) -> list:
         row, col = self.current_position
         functions = [] # up, down, left, right
-        if not ((row+1 > self.rows-1) or (self.board[row+1,col] == BLOCK) or (self.board[row+1, col] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row+1, col] in LIST_OF_ARROWS): functions.append(self.up) 
-        if not ((row-1 < 0) or (self.board[row-1,col] == BLOCK) or (self.board[row-1, col] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row-1, col] in LIST_OF_ARROWS): functions.append(self.down)
+        if not ((row-1 < 0) or (self.board[row-1,col] == BLOCK) or (self.board[row-1, col] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row-1, col] in LIST_OF_ARROWS): functions.append(self.up) 
+        if not ((row+1 > self.rows-1) or (self.board[row+1,col] == BLOCK) or (self.board[row+1, col] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row+1, col] in LIST_OF_ARROWS): functions.append(self.down)
         if not ((col-1 < 0) or (self.board[row,col-1] == BLOCK) or (self.board[row, col-1] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row, col-1] in LIST_OF_ARROWS): functions.append(self.left)
         if not ((col+1 > self.columns-1) or (self.board[row,col+1] == BLOCK) or (self.board[row, col+1] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row, col+1] in LIST_OF_ARROWS): functions.append(self.right)
         return functions
@@ -114,7 +114,7 @@ class Maze:
     @move
     def up(self) -> bool:
         """Up movement and validations"""
-        row, col = (self.current_position[0] + 1, self.current_position[1])
+        row, col = (self.current_position[0] - 1, self.current_position[1])
         if (self.current_move != UP_ARROW and self.length_move == self.last_length_move): 
             return False
         self.current_position = (row,col)
@@ -126,7 +126,7 @@ class Maze:
     @move
     def down(self) -> bool:
         """Down movement and validations"""
-        row, col = (self.current_position[0] - 1, self.current_position[1])
+        row, col = (self.current_position[0] + 1, self.current_position[1])
         if (self.current_move != DOWN_ARROW and self.length_move == self.last_length_move): 
              return False
         self.current_position = (row,col)
@@ -171,7 +171,7 @@ class Maze:
 def print_final_maze(maze) -> None:
     """Print solved maze board"""
     final_board = deepcopy(maze.board)
-    final_board[maze.rows-1][maze.columns-1] = FINAL
+    final_board[0][maze.columns-1] = FINAL
     print(str_for_boards(final_board))
     print("\nPassos:", len(maze.path_record))
 
@@ -180,7 +180,7 @@ def str_for_boards(board) -> str:
     rows, columns = len(board), len(board[0])
     horizontal_border = '+---' * columns + '+'
     output = ""
-    for row in reversed(board):
+    for row in board:
         output += horizontal_border + '\n'
         output += '| ' + ' | '.join(row) + ' |\n'
     output += horizontal_border + '\n'

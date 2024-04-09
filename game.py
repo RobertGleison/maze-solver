@@ -10,11 +10,12 @@ def main() -> None:
     game_mode = select_game_mode()
     maze = create_game()
     maze = solve_maze(game_mode, maze)
+    print(maze.position_record)
     interface.create_interface(maze)
 
 
 def create_game() -> Maze:
-    return Maze(3, 3, block_positions = [])
+    return Maze(4, 4, block_positions = [(2,1), (2,2)])
 
 
 def select_game_mode() -> int:

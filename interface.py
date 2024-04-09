@@ -10,44 +10,32 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (124, 252, 0)
 GRAY = (200, 200, 200)
+BLUE = (0,0,255)
 
 class Interface:
     def __init__(self, maze):
-        self.initial_position = (0,maze.columns-1)
-        self.final_position = (maze.rows-1,0)
+        self.initial_position = (maze.rows-1,0)
+        self.final_position = (0,maze.columns-1)
         self.rows = maze.rows
         self.columns = maze.columns
-        self.position_record = [(0,0)] + maze.position_record  # Append tuple to the list
-        self.positions = self.reverse_positions(maze.position_record)  # Pass the modified list
+        self.positions = maze.position_record + [self.final_position]  # Pass the modified list
         self.block_positions = maze.block_positions
         global SCREEN_HEIGHT, SCREEN_WIDTH
         SCREEN_HEIGHT = CELL_SIZE * self.rows
         SCREEN_WIDTH = CELL_SIZE * self.columns
 
-    def reverse_positions(self, positions):
-        new_positions = [(self.rows-1,0)]  # Start with the final position
-        for tuple in positions:
-            if tuple[0] == 0:
-                new_positions.append((tuple[0] + 2, tuple[1]))  # Adjust the x-coordinate
-            elif tuple[0] == 2:
-                new_positions.append((tuple[0] - 2, tuple[1]))  # Adjust the x-coordinate
-            else:
-                new_positions.append(tuple)  # No adjustment needed for other rows
-        new_new_positions = []
-        for tuple in new_positions:
-            new_new_positions.append((tuple[1], tuple[0]))
-        return new_new_positions
-
 
 def create_interface(maze):
     pygame.init()
     interface = Interface(maze)
+    print(interface.positions)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Unequal Length Maze")
 
     board = [[0] * BOARD_WIDTH for _ in range(BOARD_HEIGHT)]
 
     old_tuple = interface.initial_position
+    print(old_tuple)
     positions_visited = [old_tuple]
     for pos in interface.positions:
         screen.fill(WHITE)
@@ -57,10 +45,10 @@ def create_interface(maze):
                 sys.exit()
 
         # Check for collision with obstacles
-        if pos != interface.final_position and board[pos[1]][pos[0]] == 2:
+        if pos != interface.final_position and board[pos[0]][pos[1]] == 2:
             # Leave a trail behind the player block
-            board[old_tuple[1]][old_tuple[0]] = 1
-        board[pos[1]][pos[0]] = 2
+            board[old_tuple[0]][old_tuple[1]] = 1
+        board[pos[0]][pos[1]] = 2
         draw_board(board, screen)
         draw_blocks(screen, interface.block_positions)
         positions_visited.append(pos)
@@ -72,7 +60,7 @@ def create_interface(maze):
         time.sleep(0.5)
 
         old_tuple = pos
-    time.sleep(3)
+    time.sleep(5)
     pygame.quit()
     sys.exit()
 
@@ -99,7 +87,7 @@ def draw_board(board, screen):
 def draw_initial_position(screen, pos):
     x, y = pos
     rect = pygame.Rect(x * CELL_SIZE + CELL_SIZE // 4, y * CELL_SIZE + CELL_SIZE // 4, CELL_SIZE // 2, CELL_SIZE // 2)
-    pygame.draw.rect(screen, RED, rect)
+    pygame.draw.rect(screen, BLUE, rect)
 
 def draw_final_position(screen, pos):
     x, y = pos
@@ -122,7 +110,6 @@ def draw_trajectory(screen, positions):
             rect_end = (end_point[0] - thickness // 2, end_point[1] - thickness // 2, thickness, thickness)
             pygame.draw.rect(screen, BLACK, rect_start)
             pygame.draw.rect(screen, BLACK, rect_end)
-
 
           
 
