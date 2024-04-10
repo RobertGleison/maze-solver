@@ -3,8 +3,8 @@ import sys
 import time
 
 CELL_SIZE = 100
-BOARD_WIDTH = 10
-BOARD_HEIGHT = 10
+BOARD_WIDTH = 100
+BOARD_HEIGHT = 100
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -13,21 +13,22 @@ GRAY = (200, 200, 200)
 BLUE = (0,0,255)
 
 class Interface:
-    def __init__(self, maze):
+    def __init__(self, maze, rows, columns):
         self.initial_position = (maze.rows-1,0)
         self.final_position = (0,maze.columns-1)
-        self.rows = maze.rows
-        self.columns = maze.columns
-        self.positions = maze.position_record + [self.final_position]  # Pass the modified list
+        self.rows = columns
+        self.columns = rows
+        self.positions = maze.position_record  # Pass the modified list
         self.block_positions = maze.block_positions
+        self.is_solved = maze.is_complete()
         global SCREEN_HEIGHT, SCREEN_WIDTH
         SCREEN_HEIGHT = CELL_SIZE * self.rows
         SCREEN_WIDTH = CELL_SIZE * self.columns
 
 
-def create_interface(maze):
+def create_interface(maze, rows, columns):
     pygame.init()
-    interface = Interface(maze)
+    interface = Interface(maze, rows, columns)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Unequal Length Maze")
 
@@ -63,6 +64,12 @@ def create_interface(maze):
         time.sleep(0.5)
 
         old_tuple = pos
+    if interface.is_solved:
+        positions_visited += [interface.final_position]
+        draw_trajectory(screen, positions_visited) 
+        draw_initial_position(screen, interface.initial_position)
+        draw_final_position(screen, interface.final_position)
+        pygame.display.flip()
     time.sleep(4)
     pygame.quit()
     sys.exit()

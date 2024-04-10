@@ -8,13 +8,16 @@ import interface
 
 def main() -> None:
     game_mode = select_game_mode()
-    maze = create_game()
+    rows = 3
+    columns = 4
+    block_positions = []
+    maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
-    interface.create_interface(maze)
+    interface.create_interface(maze, rows, columns)
 
 
-def create_game() -> Maze:
-    return Maze(3, 3, block_positions = [])
+def create_game(rows, columns, block_positions) -> Maze:
+    return Maze(rows, columns, block_positions)
 
 
 def select_game_mode() -> int:
