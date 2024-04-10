@@ -8,8 +8,8 @@ import interface
 
 def main() -> None:
     game_mode = select_game_mode()
-    rows = 3
-    columns = 4
+    rows = 7
+    columns = 7
     block_positions = []
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)

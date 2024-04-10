@@ -1,6 +1,6 @@
 import numpy as np
-import os
 from copy import deepcopy
+from copy import copy
 
 
 FINAL = 'F'
@@ -75,8 +75,8 @@ class Maze:
         for move in list_of_moves:
             child = move()
             if child:
-                # print(type(child))
-                child.path_record += [deepcopy(child)]
+                # child.path_record += [deepcopy(child)]
+                child.path_record += [copy(child)]
                 child.position_record += [child.current_position]
                 children.append(child)
         return children
@@ -105,7 +105,8 @@ class Maze:
     def move(func) -> np.ndarray | None:
         """Decorator for movements"""
         def decorator(self):
-            node = deepcopy(self)
+            # node = deepcopy(self)
+            node = copy(self)
             result = func(node)  
             return node if result else None
         return decorator
@@ -170,7 +171,8 @@ class Maze:
 
 def print_final_maze(maze) -> None:
     """Print solved maze board"""
-    final_board = deepcopy(maze.board)
+    final_board = copy(maze.board)
+    # final_board = deepcopy(maze.board)
     final_board[0][maze.columns-1] = FINAL
     print(str_for_boards(final_board))
     print("\nPassos:", len(maze.path_record))
