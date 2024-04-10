@@ -16,10 +16,11 @@ def depth_first_search(initial_maze:Maze):
         if len(stack) > max_size_stack: max_size_stack = len(stack)
         maze = stack.pop() 
         if len(maze.path_record) > len(best_maze.path_record): best_maze = maze
+        visited.add(maze)
         for child in maze.children():
             n_path_percurred+=1
             # time.sleep(0.3)
-            os.system('clear')
+            # os.system('clear')
             print("Modo selecionado: DFS\n \n", child) 
             if child not in visited:
                 stack.append(child)  
@@ -54,7 +55,7 @@ def breadth_first_search(initial_maze):
             os.system('clear')
             print("Modo selecionado: BFS\n\n", child) 
             queue.append(child)    
-            # time.sleep(0.3)
+            time.sleep(0.3)
     if maze.there_is_no_solution():
         os.system('clear')
         print("Modo selecionado: BFS\n\n") 

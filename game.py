@@ -10,10 +10,12 @@ def main() -> None:
     game_mode = select_game_mode()
     rows = 7
     columns = 7
-    block_positions = []
+    block_positions = [(6,1),(5,1),(1,3), (3,3), (2,4)]
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
-    interface.create_interface(maze, rows, columns)
+    print(maze.position_record)
+    print(maze.path_record)
+    # interface.create_interface(maze, rows, columns)
 
 
 def create_game(rows, columns, block_positions) -> Maze:
