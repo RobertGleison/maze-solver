@@ -14,22 +14,21 @@ BLUE = (0,0,255)
 
 class Interface:
     def __init__(self, maze, rows, columns):
+        self.rows = columns # pygame interface is inverted
+        self.columns = rows # pygame interface is inverted
         self.initial_position = (maze.rows-1,0)
         self.final_position = (0,maze.columns-1)
-        self.rows = columns
-        self.columns = rows
-        self.positions = maze.position_record  # Pass the modified list
+        self.positions = maze.position_record  
         self.block_positions = maze.block_positions
         self.is_solved = maze.is_complete()
-        global SCREEN_HEIGHT, SCREEN_WIDTH
-        SCREEN_HEIGHT = CELL_SIZE * self.rows
-        SCREEN_WIDTH = CELL_SIZE * self.columns
+        self.screen_height = CELL_SIZE * rows
+        self.screen_width = CELL_SIZE * columns
 
 
 def create_interface(maze, rows, columns):
     pygame.init()
     interface = Interface(maze, rows, columns)
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((interface.screen_height,interface.screen_width))
     pygame.display.set_caption("Unequal Length Maze")
 
     board = [[0] * BOARD_WIDTH for _ in range(BOARD_HEIGHT)]
@@ -78,9 +77,9 @@ def draw_blocks(screen, block_positions):
     for pos in block_positions:
         x, y = pos
         rect = pygame.Rect(x * CELL_SIZE + CELL_SIZE // 4, y * CELL_SIZE + CELL_SIZE // 4, CELL_SIZE // 2, CELL_SIZE // 2)
-        draw_rectangle_with_x(screen, rect)
+        draw_block(screen, rect)
 
-def draw_rectangle_with_x(surface, rect):
+def draw_block(surface, rect):
     pygame.draw.rect(surface, RED, rect)
     pygame.draw.line(surface, WHITE, rect.topleft, rect.bottomright, 6)
     pygame.draw.line(surface, WHITE, rect.topright, rect.bottomleft, 6)
