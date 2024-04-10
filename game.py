@@ -2,15 +2,14 @@ import os
 from maze import Maze
 import algorithms as a
 import time
-from interface import Interface
-import interface
+import heuristics as h
 
 
 def main() -> None:
     game_mode = select_game_mode()
-    rows = 7
-    columns = 7
-    block_positions = [(6,1),(5,1),(1,3), (3,3), (2,4)]
+    rows = 5
+    columns = 5
+    block_positions = [(0,0),(0,1),(0,2)]
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
     print(maze.position_record)
@@ -39,12 +38,11 @@ def solve_maze(game_mode: int, maze: Maze) -> Maze:
     response = None
     if game_mode == 1: maze = a.breadth_first_search(maze)
     if game_mode == 2: maze = a.depth_first_search(maze)
-    # if game_mode == 3: maze = a.iterative(maze)
-    # if game_mode == 4: maze = a.greedy(maze)
+    if game_mode == 3: maze = a.iterative_deeppening_search(maze)
+    if game_mode == 4: maze = a.greedy_search(maze,h.manhattan_distance)
     # if game_mode == 5: maze = a.astar(maze)
     # if game_mode == 6: maze = a.w_astar(maze)
     return maze
-    # fodadsssssea
 
 if __name__ == "__main__":
     main()

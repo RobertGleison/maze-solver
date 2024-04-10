@@ -12,7 +12,10 @@ def euclidean_distance(initial_position, final_position):
     return (x2 - x1)**2 + (y2 - y1)**2
 
 
-def manhattan_distance(initial_position, final_position):
+def manhattan_distance(maze):
+    
+    initial_position = maze.initial_position
+    final_position = maze.final_position
     x1, y1 = initial_position
     x2, y2 = final_position
     return abs(x2 - x1) + abs(y2 - y1)
