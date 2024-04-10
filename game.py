@@ -44,6 +44,7 @@ def solve_maze(game_mode: int, maze: Maze) -> Maze:
     # if game_mode == 5: maze = a.astar(maze)
     # if game_mode == 6: maze = a.w_astar(maze)
     return maze
+    # fodadsssssea
 
 if __name__ == "__main__":
     main()
