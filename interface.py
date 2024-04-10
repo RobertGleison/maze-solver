@@ -85,8 +85,16 @@ def draw_block(surface: any, rect: any) -> None:
 def draw_board(board: list[list], screen: any) -> None:
     for y in range(BOARD_HEIGHT):
         for x in range(BOARD_WIDTH):
-            if board[y][x] == 0: pygame.draw.rect(screen, WHITE, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
-                
+            pygame.draw.rect(screen, GRAY, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
+            if x == 0:
+                pygame.draw.line(screen, GRAY, (x * CELL_SIZE, y * CELL_SIZE), (x * CELL_SIZE, (y + 1) * CELL_SIZE), 2)
+            if x == BOARD_WIDTH - 1:
+                pygame.draw.line(screen, GRAY, ((x + 1) * CELL_SIZE, y * CELL_SIZE), ((x + 1) * CELL_SIZE, (y + 1) * CELL_SIZE), 2)
+            if y == 0:
+                pygame.draw.line(screen, GRAY, (x * CELL_SIZE, y * CELL_SIZE), ((x + 1) * CELL_SIZE, y * CELL_SIZE), 2)
+            if y == BOARD_HEIGHT - 1:
+                pygame.draw.line(screen, GRAY, (x * CELL_SIZE, (y + 1) * CELL_SIZE), ((x + 1) * CELL_SIZE, (y + 1) * CELL_SIZE), 2)
+
 
 def draw_position(screen: any, pos: int, color: tuple) -> None:
     x, y = pos
@@ -95,7 +103,7 @@ def draw_position(screen: any, pos: int, color: tuple) -> None:
 
 
 def draw_trajectory(screen: any, positions: list) -> None:
-    line_size = 21
+    line_size = 31
     for i in range(len(positions)-1):
         start_point = (positions[i][0] * CELL_SIZE + CELL_SIZE // 2, positions[i][1] * CELL_SIZE + CELL_SIZE // 2)
         end_point = (positions[i + 1][0] * CELL_SIZE + CELL_SIZE // 2, positions[i + 1][1] * CELL_SIZE + CELL_SIZE // 2)

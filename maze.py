@@ -75,7 +75,7 @@ class Maze:
         for move in list_of_moves:
             child = move()
             if child:
-                child.path_record += [deepcopy(child)]
+                # child.path_record += [deepcopy(child)]
                 # child.path_record += [copy(child)]
                 child.position_record += [child.current_position]
                 children.append(child)

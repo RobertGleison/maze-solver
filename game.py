@@ -8,14 +8,14 @@ import interface
 
 def main() -> None:
     game_mode = select_game_mode()
-    rows = 7
-    columns = 7
-    block_positions = [(6,1),(5,1),(1,3), (3,3), (2,4)]
+    rows = 6
+    columns = 6
+    block_positions = [(3,1),(3,2),(1,5)]
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
     print(maze.position_record)
     print(maze.path_record)
-    # interface.create_interface(maze, rows, columns)
+    interface.create_interface(maze, rows, columns)
 
 
 def create_game(rows, columns, block_positions) -> Maze:
