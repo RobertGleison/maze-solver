@@ -27,6 +27,7 @@ class Interface:
 
 
 def create_interface(maze: Maze, rows: int, columns: int) -> None:
+    """Create the interface display"""
     pygame.init()
     interface = Interface(maze, rows, columns)
     screen = pygame.display.set_mode((interface.screen_height,interface.screen_width))
@@ -46,30 +47,25 @@ def create_interface(maze: Maze, rows: int, columns: int) -> None:
         if pos != interface.final_position and board[pos[0]][pos[1]] == 2:
             board[old_tuple[0]][old_tuple[1]] = 1
         board[pos[0]][pos[1]] = 2
-        draw_board(board, screen)
+        draw_board(screen)
         draw_blocks(screen, interface.block_positions)
         positions_visited.append(pos)
         draw_trajectory(screen, positions_visited)
         draw_position(screen, interface.initial_position, BLUE)
         draw_position(screen, interface.final_position, GREEN)
-        # rotated_screen = pygame.transform.flip(screen,True, False)
+        rotated_screen = pygame.transform.rotate(screen, -90)
+        rotated_screen = pygame.transform.flip(screen,True, True)
+        screen.blit(rotated_screen, (0, 0))
         pygame.display.flip()
         time.sleep(0.5)
         old_tuple = pos
-
-    if interface.is_solved:
-        positions_visited += [interface.final_position]
-        draw_trajectory(screen, positions_visited) 
-        draw_position(screen, interface.initial_position, BLUE)
-        draw_position(screen, interface.final_position, GREEN)
-        (screen, interface.final_position)
-        pygame.display.flip()
 
     time.sleep(4)
     pygame.quit()
     sys.exit()
 
 def draw_blocks(screen: any, block_positions: list) -> None:
+    """Draw blocked positions into board"""
     for pos in block_positions:
         x, y = pos
         rect = pygame.Rect(x * CELL_SIZE + CELL_SIZE // 4, y * CELL_SIZE + CELL_SIZE // 4, CELL_SIZE // 2, CELL_SIZE // 2)
@@ -77,12 +73,14 @@ def draw_blocks(screen: any, block_positions: list) -> None:
 
 
 def draw_block(surface: any, rect: any) -> None:
+    """Draw single block positions into board"""
     pygame.draw.rect(surface, RED, rect)
     pygame.draw.line(surface, WHITE, rect.topleft, rect.bottomright, 6)
     pygame.draw.line(surface, WHITE, rect.topright, rect.bottomleft, 6)
 
 
-def draw_board(board: list[list], screen: any) -> None:
+def draw_board(screen: any) -> None:
+    """Draw background board"""
     for y in range(BOARD_HEIGHT):
         for x in range(BOARD_WIDTH):
             pygame.draw.rect(screen, GRAY, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
@@ -97,12 +95,14 @@ def draw_board(board: list[list], screen: any) -> None:
 
 
 def draw_position(screen: any, pos: int, color: tuple) -> None:
+    """Draw some position into board, like initial and final positions"""
     x, y = pos
     rect = pygame.Rect(x * CELL_SIZE + CELL_SIZE // 4, y * CELL_SIZE + CELL_SIZE // 4, CELL_SIZE // 2, CELL_SIZE // 2)
     pygame.draw.rect(screen, color, rect)
 
 
 def draw_trajectory(screen: any, positions: list) -> None:
+    """Draw lines of the trajectory"""
     line_size = 31
     for i in range(len(positions)-1):
         start_point = (positions[i][0] * CELL_SIZE + CELL_SIZE // 2, positions[i][1] * CELL_SIZE + CELL_SIZE // 2)
@@ -112,6 +112,7 @@ def draw_trajectory(screen: any, positions: list) -> None:
         
     
 def draw_line_edges(screen: any, start_point: tuple, end_point: tuple, line_size: int) -> None:
+    """Draw rectangles to fill trajectory edges"""
     rect_start = (start_point[0] - line_size // 2, start_point[1] - line_size // 2, line_size, line_size)
     rect_end = (end_point[0] - line_size // 2, end_point[1] - line_size // 2, line_size, line_size)
     pygame.draw.rect(screen, BLACK, rect_start)

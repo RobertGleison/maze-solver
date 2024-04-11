@@ -175,7 +175,7 @@ def print_final_maze(maze) -> None:
     # final_board = deepcopy(maze.board)
     final_board[0][maze.columns-1] = FINAL
     print(str_for_boards(final_board))
-    print("\nPassos:", len(maze.path_record))
+    
 
 
 def str_for_boards(board) -> str:
