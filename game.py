@@ -48,6 +48,3 @@ def solve_maze(game_mode: int, maze: Maze) -> Maze:
     if game_mode == 6: maze = a.greedy_search(maze, euclidean_distance ,cost=True, weight=2)
     return maze
 
-
-if __name__ == "__main__":
-    main()
