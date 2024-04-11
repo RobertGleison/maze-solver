@@ -13,6 +13,7 @@ DOWN_ARROW = '↓'
 LEFT_ARROW = '←'
 LIST_OF_ARROWS = [UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, INITIAL]
 
+
 class Maze:
     def __init__(self, rows: int, columns: int, block_positions: list) -> None:
         self.rows = rows
@@ -20,8 +21,7 @@ class Maze:
         self.final_position = (0,self.columns-1)
         self.initial_position = (self.rows-1,0)
         self.board = self.make_board(block_positions)
-        self.path_record = []
-        self.position_record = []
+        self.position_record = [self.rows-1,0]
         self.last_move = 'last' 
         self.current_move = 'current'
         self.length_move = 0
@@ -40,7 +40,6 @@ class Maze:
             output += '| ' + ' | '.join(row) + ' |\n'
         output += horizontal_border + '\n'
         return output
-    
     
     
     def add_final_position(self, board: np.ndarray) -> None:
@@ -83,6 +82,7 @@ class Maze:
     
 
     def avaiable_moves(self) -> list:
+        """Return the possible move functions to be explored based on the current position"""
         row, col = self.current_position
         functions = [] # up, down, left, right
         if not ((row-1 < 0) or (self.board[row-1,col] == BLOCK) or (self.board[row-1, col] == FINAL and np.count_nonzero(self.board == ' ') > 0) or self.board[row-1, col] in LIST_OF_ARROWS): functions.append(self.up) 
@@ -176,7 +176,6 @@ def print_final_maze(maze) -> None:
     final_board[0][maze.columns-1] = FINAL
     print(str_for_boards(final_board))
     
-
 
 def str_for_boards(board) -> str:
     """Print board of actual maze"""

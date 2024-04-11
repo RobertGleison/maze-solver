@@ -4,17 +4,18 @@ import algorithms as a
 import time
 from interface import Interface
 import interface
+from heuristics import manhattan_distance, euclidean_distance
 
 
 def main() -> None:
     """Play maze"""
     game_mode = select_game_mode()
     rows = 6
-    columns = 5
-    block_positions = [(3,1),(3,2),(1,4)]
+    columns = 6
+    block_positions = [(3,2),(3,1),(1,5)]
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
-    interface.create_interface(maze, rows, columns)
+    # interface.create_interface(maze, rows, columns)
 
 
 def create_game(rows, columns, block_positions) -> Maze:
@@ -37,15 +38,16 @@ def select_game_mode() -> int:
 
 
 def solve_maze(game_mode: int, maze: Maze) -> Maze:
-    """Chose the algorithm to play the game"""
+    """Chose the algorithm to play"""
     response = None
     if game_mode == 1: maze = a.breadth_first_search(maze)
     if game_mode == 2: maze = a.depth_first_search(maze)
-    if game_mode == 3: maze = a.iterative(maze)
-    # if game_mode == 4: maze = a.greedy(maze)
-    # if game_mode == 5: maze = a.astar(maze)
-    # if game_mode == 6: maze = a.w_astar(maze)
+    if game_mode == 3: maze = a.iterative_deeppening_search(maze)
+    if game_mode == 4: maze = a.greedy_search(maze, euclidean_distance)
+    if game_mode == 5: maze = a.greedy_search(maze, euclidean_distance ,cost=True)
+    if game_mode == 6: maze = a.w_astar(maze)
     return maze
+
 
 if __name__ == "__main__":
     main()
