@@ -21,7 +21,8 @@ class Maze:
         self.final_position = (0,self.columns-1)
         self.initial_position = (self.rows-1,0)
         self.board = self.make_board(block_positions)
-        self.position_record = [self.rows-1,0]
+        self.position_record = []
+        # self.position_record = [self.rows-1,0]
         self.last_move = 'last' 
         self.current_move = 'current'
         self.length_move = 0

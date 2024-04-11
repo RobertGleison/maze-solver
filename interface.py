@@ -57,10 +57,10 @@ def create_interface(maze: Maze, rows: int, columns: int) -> None:
         rotated_screen = pygame.transform.flip(screen,True, True)
         screen.blit(rotated_screen, (0, 0))
         pygame.display.flip()
-        time.sleep(0.3)
+        time.sleep(0.2)
         old_tuple = pos
 
-    time.sleep(4)
+    time.sleep(5)
     pygame.quit()
     sys.exit()
 
