@@ -15,7 +15,7 @@ def main() -> None:
     block_positions = [(3,2),(3,1),(1,5)]
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
-    # interface.create_interface(maze, rows, columns)
+    interface.create_interface(maze, rows, columns)
 
 
 def create_game(rows, columns, block_positions) -> Maze:
@@ -43,9 +43,9 @@ def solve_maze(game_mode: int, maze: Maze) -> Maze:
     if game_mode == 1: maze = a.breadth_first_search(maze)
     if game_mode == 2: maze = a.depth_first_search(maze)
     if game_mode == 3: maze = a.iterative_deeppening_search(maze)
-    if game_mode == 4: maze = a.greedy_search(maze, euclidean_distance)
+    if game_mode == 4: maze = a.greedy_search(maze, euclidean_distance, weight=0)
     if game_mode == 5: maze = a.greedy_search(maze, euclidean_distance ,cost=True)
-    if game_mode == 6: maze = a.w_astar(maze)
+    if game_mode == 6: maze = a.greedy_search(maze, euclidean_distance ,cost=True, weight=2)
     return maze
 
 

@@ -106,11 +106,11 @@ def depth_limited_search(initial_maze, limit):
     return (best_maze, max_size_stack, n_path_percurred)   
 
 
-def greedy_search(initial_maze, heuristic, cost=False):
+def greedy_search(initial_maze, heuristic, cost=False, weight=0):
     start_time = time.time()
     n_path_percurred = 0
     priority_queue = []
-    heappush(priority_queue, (heuristic(initial_maze, cost=False), 0, initial_maze)) if not cost else heappush(priority_queue, (heuristic(initial_maze, cost=True) , 0, initial_maze))
+    heappush(priority_queue, (heuristic(initial_maze, weight, cost=False), 0, initial_maze)) if not cost else heappush(priority_queue, (heuristic(initial_maze, weight, cost=True) , 0, initial_maze))
     visited = set()
     best_maze = initial_maze
     id_counter = 1
@@ -127,9 +127,11 @@ def greedy_search(initial_maze, heuristic, cost=False):
         for child in maze.children():
             n_path_percurred += 1
             if child not in visited:
-                heappush(priority_queue, (heuristic(child), id_counter, child)) if not cost else heappush(priority_queue, (heuristic(child, cost=True), id_counter, child))
+                heappush(priority_queue, (heuristic(child, weight), id_counter, child)) if not cost else heappush(priority_queue, (heuristic(child, weight, cost=True), id_counter, child))
                 id_counter += 1
-    print_statistics(best_maze, start_time, max_size_heap, n_path_percurred, 'Greedy')
+    mode = 'Greedy' 
+    mode = 'A*' if cost and weight == 0 else 'Weighted A*'
+    print_statistics(best_maze, start_time, max_size_heap, n_path_percurred, mode)
     return best_maze
 
 
