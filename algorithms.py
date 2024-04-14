@@ -63,6 +63,7 @@ def depth_first_search(initial_maze: Maze):
             n_path_percurred+=1
             # os.system("clear")
             # print("Modo selecionado: DFS\n \n", child)
+            # time.sleep(0.3)
             if child not in visited:
                 stack.append(child)  
     print_statistics(best_maze, start_time, max_size_stack, n_path_percurred, 'DFS')
@@ -72,10 +73,11 @@ def depth_first_search(initial_maze: Maze):
 def iterative_deeppening_search(initial_maze):
     start_time = time.time()
     n_path_percurred = 0
-    depth_limit = 6
+    depth_limit = 31
     best_maze = initial_maze
     for depth in range(1,depth_limit+1):
-        best_maze, max_size_stack, n = depth_limited_search(initial_maze, depth)
+        best_maze, max_size_stack, n = depth_limited_search(initial_maze,depth_limit)
+        # print("Modo selecionado: DFS\n \n", best_maze)
         n_path_percurred+=n
         if best_maze.is_complete():
             break
@@ -96,13 +98,15 @@ def depth_limited_search(initial_maze, limit):
         if depth < limit:
             if maze.is_complete():
                 break
-        visited.add(maze)
-        for child in maze.children():
-            n_path_percurred+=1
-            # os.system("clear")
-            # print("Modo selecionado: DFS\n \n", child)
-            if child not in visited:
-                stack.append([child, depth + 1])  
+            visited.add(maze)
+            for child in maze.children():
+                n_path_percurred+=1
+                # os.system("clear")
+                # print("Modo selecionado: DFS\n \n", child)
+                # time.sleep(0.1)
+                if child not in visited:
+                    stack.append([child, depth + 1]) 
+        else: break 
     return (best_maze, max_size_stack, n_path_percurred)   
 
 
@@ -124,6 +128,9 @@ def greedy_search(initial_maze, heuristic, cost=False, weight=0):
         if maze.is_complete():
             break 
         visited.add(maze)
+        os.system("clear")
+        print("Modo selecionado: A*\n \n", maze)
+        time.sleep(0.1)
         for child in maze.children():
             n_path_percurred += 1
             if child not in visited:
