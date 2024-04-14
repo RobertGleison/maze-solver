@@ -73,20 +73,18 @@ def depth_first_search(initial_maze: Maze):
 def iterative_deeppening_search(initial_maze):
     start_time = time.time()
     n_path_percurred = 0
-    depth_limit = 31
+    depth_limit = 32
     best_maze = initial_maze
     for depth in range(1,depth_limit+1):
-        best_maze, max_size_stack, n = depth_limited_search(initial_maze,depth_limit)
+        best_maze, max_size_stack, n_path_percurred = depth_limited_search(initial_maze,depth, n_path_percurred)
         # print("Modo selecionado: DFS\n \n", best_maze)
-        n_path_percurred+=n
         if best_maze.is_complete():
             break
     print_statistics(best_maze, start_time, max_size_stack, n_path_percurred, 'IFS')
     return best_maze
 
 
-def depth_limited_search(initial_maze, limit):
-    n_path_percurred = 0
+def depth_limited_search(initial_maze, limit, n_path_percurred):
     best_maze = initial_maze
     max_size_stack = 0
     stack = deque([(initial_maze, 0)]) 
@@ -128,9 +126,9 @@ def greedy_search(initial_maze, heuristic, cost=False, weight=0):
         if maze.is_complete():
             break 
         visited.add(maze)
-        os.system("clear")
-        print("Modo selecionado: A*\n \n", maze)
-        time.sleep(0.1)
+        # os.system("clear")
+        # print("Modo selecionado: A*\n \n", maze)
+        # time.sleep(0.1)
         for child in maze.children():
             n_path_percurred += 1
             if child not in visited:
