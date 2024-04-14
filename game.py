@@ -10,12 +10,12 @@ from heuristics import manhattan_distance, euclidean_distance
 def main() -> None:
     """Play maze"""
     game_mode = select_game_mode()
-    rows = 6
-    columns = 6
-    block_positions = [(3,2),(3,1),(1,5)]
+    rows = 7
+    columns = 7
+    block_positions = [(6,1), (5,3), (3,3),(3,4)]
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
-    interface.create_interface(maze, rows, columns)
+    # interface.create_interface(maze, rows, columns)
 
 
 def create_game(rows, columns, block_positions) -> Maze:

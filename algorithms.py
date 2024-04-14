@@ -35,10 +35,12 @@ def breadth_first_search(initial_maze):
         maze = queue.popleft()   
         if len(maze.position_record) > len(best_maze.position_record): best_maze = maze
         visited.add(maze)
+        if maze.is_complete():
+                break
         for child in maze.children():   
             n_path_percurred+=1
             os.system('clear')
-            print("Modo selecionado: BFS\n\n", child) 
+            # print("Modo selecionado: BFS\n\n", child) 
             queue.append(child)    
             # time.sleep(0.3)
             if child not in visited:
@@ -59,11 +61,13 @@ def depth_first_search(initial_maze: Maze):
         maze = stack.pop() 
         if len(maze.position_record) > len(best_maze.position_record): best_maze = maze
         visited.add(maze)
+        if maze.is_complete():
+                break
         for child in maze.children():
             n_path_percurred+=1
             # os.system("clear")
             # print("Modo selecionado: DFS\n \n", child)
-            # time.sleep(0.3)
+            # time.sleep(0.1)
             if child not in visited:
                 stack.append(child)  
     print_statistics(best_maze, start_time, max_size_stack, n_path_percurred, 'DFS')
@@ -73,11 +77,12 @@ def depth_first_search(initial_maze: Maze):
 def iterative_deeppening_search(initial_maze):
     start_time = time.time()
     n_path_percurred = 0
-    depth_limit = 32
+    depth_limit = 44
     best_maze = initial_maze
     for depth in range(1,depth_limit+1):
         best_maze, max_size_stack, n_path_percurred = depth_limited_search(initial_maze,depth, n_path_percurred)
-        # print("Modo selecionado: DFS\n \n", best_maze)
+        # print("Modo selecionado: IFS\n \n", best_maze)
+        # time.sleep(0.3)
         if best_maze.is_complete():
             break
     print_statistics(best_maze, start_time, max_size_stack, n_path_percurred, 'IFS')
@@ -117,20 +122,19 @@ def greedy_search(initial_maze, heuristic, cost=False, weight=0):
     best_maze = initial_maze
     id_counter = 1
     max_size_heap = 0
-    nodes_visited = 0
     while priority_queue:
         if len(priority_queue) > max_size_heap: max_size_heap = len(priority_queue)
         _, _, maze = heappop(priority_queue)
-        nodes_visited += 1  
+        n_path_percurred += 1
         if len(maze.position_record) > len(best_maze.position_record): best_maze = maze
+        visited.add(maze)
         if maze.is_complete():
             break 
-        visited.add(maze)
         # os.system("clear")
         # print("Modo selecionado: A*\n \n", maze)
         # time.sleep(0.1)
         for child in maze.children():
-            n_path_percurred += 1
+            
             if child not in visited:
                 heappush(priority_queue, (heuristic(child, weight), id_counter, child)) if not cost else heappush(priority_queue, (heuristic(child, weight, cost=True), id_counter, child))
                 id_counter += 1
