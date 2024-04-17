@@ -5,8 +5,6 @@ def euclidean_distance(maze, weight, cost=False):
 
 
 def manhattan_distance(maze, weight, cost=False):
-    initial_position = maze.current_position
-    final_position = maze.final_position
-    x1, y1 = initial_position
-    x2, y2 = final_position
+    x1, y1 = maze.current_position
+    x2, y2 = maze.final_position
     return abs(x2 - x1) + abs(y2 - y1) if not cost else (abs(x2 - x1) + abs(y2 - y1))*weight + len(maze.position_record)

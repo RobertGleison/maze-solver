@@ -22,7 +22,6 @@ class Maze:
         self.initial_position = (self.rows-1,0)
         self.board = self.make_board(block_positions)
         self.position_record = []
-        # self.position_record = [self.rows-1,0]
         self.last_move = 'last' 
         self.current_move = 'current'
         self.length_move = 0
@@ -75,8 +74,6 @@ class Maze:
         for move in list_of_moves:
             child = move()
             if child:
-                # child.path_record += [deepcopy(child)]
-                # child.path_record += [copy(child)]
                 child.position_record += [child.current_position]
                 children.append(child)
         return children

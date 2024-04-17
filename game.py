@@ -10,9 +10,9 @@ from heuristics import manhattan_distance, euclidean_distance
 def main() -> None:
     """Play maze"""
     game_mode = select_game_mode()
-    rows = 7
-    columns = 7
-    block_positions = [(6,1), (5,3), (3,3),(3,4)]
+    rows = 4
+    columns = 4
+    block_positions = []
     maze = create_game(rows, columns, block_positions)
     maze = solve_maze(game_mode, maze)
     # interface.create_interface(maze, rows, columns)
@@ -36,15 +36,16 @@ def select_game_mode() -> int:
             return game_mode            
         print("Por favor, digite um número correspondente a um modo de resolução válido.\n")
 
+DECISION_ALGORITHMS = {1: a.breadth_first_search,
+                       2: a.depth_first_search,
+                       3: a.iterative_deeppening_search,
+                       4: a.greedy_search,
+                       5: a.greedy_search,
+                       6: a.greedy_search}
 
 def solve_maze(game_mode: int, maze: Maze) -> Maze:
     """Chose the algorithm to play"""
-    response = None
-    if game_mode == 1: maze = a.breadth_first_search(maze)
-    if game_mode == 2: maze = a.depth_first_search(maze)
-    if game_mode == 3: maze = a.iterative_deeppening_search(maze)
-    if game_mode == 4: maze = a.greedy_search(maze, euclidean_distance, weight=0)
-    if game_mode == 5: maze = a.greedy_search(maze, euclidean_distance ,cost=True)
-    if game_mode == 6: maze = a.greedy_search(maze, euclidean_distance ,cost=True, weight=2)
-    return maze
+    if game_mode >= 4: result_maze = DECISION_ALGORITHMS[game_mode](maze, euclidean_distance)
+    else: result_maze = DECISION_ALGORITHMS[game_mode](maze)
+    return result_maze
 
